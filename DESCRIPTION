@@ -1,0 +1,10 @@
+Package: BLB
+Type: Package
+Title: Bag of Little Bootstraps
+Version: 0.1
+Date: 2015-11-25
+Author: Ella Kaye and Xenia Miscouridou
+Maintainer: Ella Kaye <ella.kaye@stats.ox.ac.uk>
+Description: High performance implementation of Bag of Little Bootstraps
+License: What license is it under?
+LazyData: TRUE
