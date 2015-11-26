@@ -1,0 +1,7 @@
+CC = gcc
+PCK_CFLAGS = -march=native -mtune=native -std=c11
+PCK_LIBS = -lgsl -lgslcblas
+
+all: $(SHLIB)
+
+
