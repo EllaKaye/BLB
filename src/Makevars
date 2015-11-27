@@ -1,6 +1,5 @@
-CC = gcc
-PCK_CFLAGS = -march=native -mtune=native -std=c11
-PCK_LIBS = -lgsl -lgslcblas
+PKG_CFLAGS = -I/usr/local/include -march=native -mtune=native -std=c11
+PKG_LIBS = -L/usr/local/lib -lgsl -lgslcblas
 
 all: $(SHLIB)
 
