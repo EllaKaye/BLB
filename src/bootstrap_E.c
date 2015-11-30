@@ -5,7 +5,7 @@
 #include <math.h>
 #include <time.h>
 
-void samp_k_from_n (int *k, int *n, int *a)
+void samp_k_from_n_E (int *k, int *n, int *a)
 {
   int b[*n];
 

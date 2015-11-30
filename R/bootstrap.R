@@ -1,4 +1,4 @@
-samp_k_from_n <- function(k, n) {
+samp_k_from_n_E <- function(k, n) {
   ans <- .C("samp_k_from_n", as.integer(k), as.integer(n), a = as.integer(numeric(k)))
   return(ans$a)
 }
