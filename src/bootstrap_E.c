@@ -121,7 +121,7 @@ void bootstrap_b_multi(double subsamp[], double *result, int *b, int *B, int *n,
 
 }
 
-void BLB_serial(double x[], double *result, float *gamma, int *s, int *R, int *n)
+void BLB_serial(double x[], double *result, double *gamma, int *s, int *R, int *n)
   // n is length of the data
 {
   static gsl_rng *restrict r = NULL;
@@ -151,7 +151,7 @@ void BLB_serial(double x[], double *result, float *gamma, int *s, int *R, int *n
   *result = gsl_stats_mean(xis, 1, *s);
 }
 
-void BLB_serial_multi(double x[], double *result, float gamma, int s, int R, int n)
+void BLB_serial_multi(double x[], double *result, double *gamma, int *s, int *R, int *n)
   // n is length of the data
 {
   static gsl_rng *restrict r = NULL;
