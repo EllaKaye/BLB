@@ -1,4 +1,4 @@
-PKG_CFLAGS = -I/usr/local/include -march=native -mtune=native -std=c11
+PKG_CFLAGS = -O3 -I/usr/local/include -march=native -mtune=native -std=c11 -fopenmp
 PKG_LIBS = -L/usr/local/lib -lgsl -lgslcblas
 
 all: $(SHLIB)
