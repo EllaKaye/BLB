@@ -11,18 +11,30 @@ void bootstrap_b(double x[], double *result, int *b, int *B, int *n, gsl_rng *re
 void bootstrap_b_omp(double x[], double *result, int *b, int *B, int *n, gsl_rng *restrict r)
 {
   //printf("\nI am now here.\n\n");
-  double T_boot[*B]; // to store result of doing statistic (mean) on each replicate
+  // double T_boot[*B]; // to store result of doing statistic (mean) on each replicate
   
+  double theta_star = 0.0;
+  double theta_star_sq = 0.0;
+  
+  #pragma omp parallel for reduction(+:theta_star, theta_star_sq)
   for (int i = 0; i < *B; i++) {
+    
+    double theta_star_temp;
+    double theta_star_sq_temp;
     
     double x_star[*n];
     gsl_ran_sample(r, x_star, *n, x, *b, sizeof(double));
     
-    T_boot[i] = gsl_stats_mean(x_star, 1, *n);
+    theta_star_temp = gsl_stats_mean(x_star, 1, *n);
+    theta_star_sq_temp = pow(theta_star_temp, 2);
+    theta_star += theta_star_temp;
+    theta_star_sq += theta_star_sq_temp;
     //printf("\n\n T_[%i] = %f\n\n", i, T_boot[i]);
   }
-  
-  *result = sqrt(gsl_stats_variance(T_boot, 1, *B));
+  double theta_star_bar = theta_star / (double) *B;
+  double var;
+  var = (theta_star_sq - *B * pow(theta_star_bar, 2)) / (*B -1);
+  *result = sqrt(var);
 }
 
   
