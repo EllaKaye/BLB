@@ -25,6 +25,7 @@ void samp_k_from_n_E (int *k, int *n, int *a)
   gsl_ran_sample (r, a, *k, b, *n, sizeof(int));
 }
 
+/*
 void bootstrap(double x[], double *result, int *B, int *n) {
 
   double T_boot[*B];
@@ -33,7 +34,7 @@ void bootstrap(double x[], double *result, int *B, int *n) {
 
   for (int i = 0; i < *B; i++) {
 
-    samp_k_from_n(n, n, a);
+    samp_k_from_n_E(n, n, a);
 
     double x_star[*n];
 
@@ -47,6 +48,7 @@ void bootstrap(double x[], double *result, int *B, int *n) {
 
   *result = sqrt(gsl_stats_variance(T_boot, 1, *B));
 }
+ */
 
 void bootstrap_b(double x[], double *result, int *b, int *B, int *n, gsl_rng *restrict r)
 {
@@ -79,6 +81,7 @@ void bootstrap_b(double x[], double *result, int *b, int *B, int *n, gsl_rng *re
 
 }
 
+/*
 void bootstrap_b_multi(double subsamp[], double *result, int *b, int *B, int *n, gsl_rng *restrict r)
 {
   //printf("\nI am now here.\n\n");
@@ -181,4 +184,4 @@ void BLB_serial_multi(double x[], double *result, double *gamma, int *s, int *R,
   *result = gsl_stats_mean(xis, 1, *s);
 }
 
-
+*/

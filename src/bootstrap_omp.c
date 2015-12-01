@@ -39,8 +39,6 @@ void bootstrap_b_omp(double x[], double *result, int *b, int *B, int *n, gsl_rng
   *result = sqrt(var);
 }
 
-  
-
 void BLB_omp_on_s(double x[], double *result, double *gamma, int *s, int *R, int *n)
   // n is length of the data 
 {
@@ -54,7 +52,7 @@ void BLB_omp_on_s(double x[], double *result, double *gamma, int *s, int *R, int
   int b;
   b = (int) floor(pow(*n, *gamma));
   
-  double xi;
+  double xi = 0;
   
   #pragma omp parallel for reduction(+:xi)
   for (int i = 0; i < *s; i++)
