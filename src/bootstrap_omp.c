@@ -19,6 +19,8 @@ void bootstrap_b_omp(double x[], double *result, int *b, int *B, int *n, gsl_rng
   #pragma omp parallel for reduction(+:theta_star, theta_star_sq)
   for (int i = 0; i < *B; i++) {
     
+    gsl_rng_set(r, time(NULL) + i * 1024);
+    
     double theta_star_temp;
     double theta_star_sq_temp;
     
@@ -33,13 +35,13 @@ void bootstrap_b_omp(double x[], double *result, int *b, int *B, int *n, gsl_rng
   }
   double theta_star_bar = theta_star / (double) *B;
   double var;
-  var = (theta_star_sq - *B * pow(theta_star_bar, 2)) / (*B -1);
+  var = (theta_star_sq - *B * pow(theta_star_bar, 2)) / (*B - 1);
   *result = sqrt(var);
 }
 
   
 
-void BLB_omp(double x[], double *result, float *gamma, int *s, int *R, int *n)
+void BLB_omp_on_s(double x[], double *result, double *gamma, int *s, int *R, int *n)
   // n is length of the data 
 {
   static gsl_rng *restrict r = NULL;
@@ -72,4 +74,34 @@ void BLB_omp(double x[], double *result, float *gamma, int *s, int *R, int *n)
   // take average of results from the s subsamples
   xi = xi / (double) *n;
   *result = xi;	
+}
+
+void BLB_omp_on_B(double x[], double *result, double *gamma, int *s, int *R, int *n)
+  // n is length of the data
+{
+  static gsl_rng *restrict r = NULL;
+  
+  if(r == NULL) { // First call to this function, setup RNG
+    gsl_rng_env_setup();
+    r = gsl_rng_alloc(gsl_rng_mt19937);
+    gsl_rng_set(r, time(NULL));
+  }
+  
+  int b;
+  b = (int) floor(pow(*n, *gamma));
+  
+  double xis[*s];
+  
+  for (int i = 0; i < *s; i++)
+  {
+    // select subsample of size b of the data
+    double subsamp[b];
+    gsl_ran_choose(r, subsamp, b, x, *n, sizeof(double));
+    
+    // run bootstrap on that subsample (resamples n for each replicate)
+    bootstrap_b_omp(subsamp, &xis[i], &b, R, n, r);
+  }
+  
+  // take average of results from the s subsamples
+  *result = gsl_stats_mean(xis, 1, *s);
 }

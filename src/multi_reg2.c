@@ -8,6 +8,7 @@
 #include <gsl/gsl_cblas.h>
 #include <math.h>
 #include <time.h>
+#include <omp.h>
 
 
 //samples k out of n elements with replacement and stores them in the vector a
