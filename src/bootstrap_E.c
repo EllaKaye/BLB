@@ -50,6 +50,7 @@ void bootstrap(double x[], double *result, int *B, int *n) {
 }
  */
 
+/*
 void bootstrap_b(double x[], double *result, int *b, int *B, int *n, gsl_rng *restrict r)
 {
   //printf("\nI am now here.\n\n");
@@ -80,6 +81,7 @@ void bootstrap_b(double x[], double *result, int *b, int *B, int *n, gsl_rng *re
   //printf("\n\nresult is %f\n\n", sqrt(gsl_stats_variance(T_boot, 1, B)));
 
 }
+ */
 
 /*
 void bootstrap_b_multi(double subsamp[], double *result, int *b, int *B, int *n, gsl_rng *restrict r)
