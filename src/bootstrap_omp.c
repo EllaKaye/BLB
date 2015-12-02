@@ -5,6 +5,10 @@
 #include <time.h>
 #include <sys/time.h>
 #include <omp.h>
+#include "tools.h"
+
+void bootstrap_multidim (double x[], double y[], double* result, int* b, int* B, int *n, int* d);
+void samp_k_from_n (int* k, int* n, int* a, gsl_rng *restrict r);
 
 void bootstrap_b(double x[], double *result, int *b, int *B, int *n, gsl_rng *restrict r)
 {
@@ -141,6 +145,59 @@ void BLB_omp_on_s(double x[], double *result, double *gamma, int *s, int *R, int
   xi = xi / (double) *s;
   *result = xi;	
 }
+
+/*
+void BLB_md_omp_on_s(double x[], double y[], double *result, double *gamma, int *s, int *R, int *n, int *d)
+  // n is length of the data 
+{
+  int b;
+  b = (int) floor(pow(*n, *gamma));
+  
+  double xi[*d];
+  
+#pragma omp parallel reduction(+:xi)
+{
+  gsl_rng *restrict r = NULL;
+  if(r == NULL) { // First call to this function, setup RNG
+    gsl_rng_env_setup();
+    r = gsl_rng_alloc(gsl_rng_mt19937);
+  }
+  gsl_rng_set(r, time(NULL) + omp_get_thread_num() * 1024);
+  
+#pragma omp for
+  for (int i = 0; i < *s; i++)
+  {
+    double xi_temp[*d];
+    
+    // select subsample of size b of the data
+    int subsamp_idx[b];
+    samp_k_from_n(b, n, subsamp_idx, r);
+    double subsamp_x[b * *d];
+    
+    double subsamp_y[b];
+    for (int j = 0; j < b; j++) {
+      subsamp_y[j] = y[subsamp_idx[j]];
+      for (int i = 0; i < *d; i++) {
+        subsamp_x[i + j * *d] = x[i + subsamp_idx[j] * *d];
+      }
+     }
+      
+    // run bootstrap on that subsample (resamples n for each replicate)
+    bootstrap_multidim(subsamp_x, subsamp_y, xi_temp, &b, R, n, d);
+    
+    for (int j = 0; j < *d; j++) {
+      xi[j] += xi_temp[j];
+    }
+  }
+}
+// take average of results from the s subsamples
+
+  for (int j = 0; j < *d; j++) {
+    xi[j] = xi[j] / (double) *s;
+  }
+  result = xi;	
+}
+*/
 
 void BLB_omp_on_B(double x[], double *result, double *gamma, int *s, int *R, int *n)
   // n is length of the data

@@ -56,7 +56,7 @@ BLB_R <- function(data, gamma, FUN, ..., s=15, r=100) {
 #' BLB_serial(X, 0.9)
 #' @export
 BLB_serial <- function(data, gamma, s = 15, r = 100) {
-  ans <- .C("BLB_serial", as.double(data), result = as.double(0), as.double(gamma), as.integer(s), as.integer(r), as.integer(length(x)))
+  ans <- .C("BLB_serial", as.double(data), result = as.double(0), as.double(gamma), as.integer(s), as.integer(r), as.integer(length(data)))
   return(ans$result)
 }
 #' @rdname BLB
@@ -64,7 +64,7 @@ BLB_serial <- function(data, gamma, s = 15, r = 100) {
 #' BLB_omp_on_s(X, 0.6)
 #' @export
 BLB_omp_on_s <- function(data, gamma, s = 15, r = 100) {
-  ans <- .C("BLB_omp_on_s", as.double(data), result = as.double(0), as.double(gamma), as.integer(s), as.integer(r), as.integer(length(x)))
+  ans <- .C("BLB_omp_on_s", as.double(data), result = as.double(0), as.double(gamma), as.integer(s), as.integer(r), as.integer(length(data)))
   return(ans$result)
 }
 
@@ -73,7 +73,7 @@ BLB_omp_on_s <- function(data, gamma, s = 15, r = 100) {
 #' BLB_omp_on_r(X, 0.6)
 #' @export
 BLB_omp_on_r <- function(data, gamma, s = 15, r = 100) {
-  ans <- .C("BLB_omp_on_B", as.double(data), result = as.double(0), as.double(gamma), as.integer(s), as.integer(r), as.integer(length(x)))
+  ans <- .C("BLB_omp_on_B", as.double(data), result = as.double(0), as.double(gamma), as.integer(s), as.integer(r), as.integer(length(data)))
   return(ans$result)
 }
 
@@ -82,7 +82,7 @@ BLB_omp_on_r <- function(data, gamma, s = 15, r = 100) {
 #' BLB_omp_on_sr(X, 0.6)
 #' @export
 BLB_omp_on_sr <- function(data, gamma, s = 15, r = 100) {
-  ans <- .C("BLB_omp_on_sB", as.double(data), result = as.double(0), as.double(gamma), as.integer(s), as.integer(r), as.integer(length(x)))
+  ans <- .C("BLB_omp_on_sB", as.double(data), result = as.double(0), as.double(gamma), as.integer(s), as.integer(r), as.integer(length(data)))
   return(ans$result)
 }
 
@@ -106,3 +106,12 @@ BLB_cluster <- function(data, gamma, cluster, s=15, r=100) {
   stopCluster(clust)  
   return(mean(unlist(lambda)))
 }
+
+# void BLB_md_omp_on_s(double x[], double y[], double *result, double *gamma, int *s, int *R, int *n, int *d)
+#BLB_md_omp_on_s <- function(X, y, gamma, s=15, r=100) {
+#  n <- nrow(X)
+#  d <- ncol(X)
+#  b <- floor(n^gamma)
+#  ans <- .C("BLB_md_omp_on_s", as.double(t(X)), as.double(y), result = as.double(numeric(d)), as.double(gamma), as.integer(s), as.integer(r), as.integer(n), as.integer(d))
+#  return(ans$result)
+#}

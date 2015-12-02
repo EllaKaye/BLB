@@ -10,7 +10,7 @@
 #include <time.h>
 #include <omp.h>
 
-
+/*
 //samples k out of n elements with replacement and stores them in the vector a
 void samp_k_from_n (int* k, int* n, int* a, gsl_rng *restrict r)
 {
@@ -26,7 +26,7 @@ void samp_k_from_n (int* k, int* n, int* a, gsl_rng *restrict r)
   gsl_ran_sample (r, a, *k, b, *n, sizeof( int ));
 
 }
-
+*/
 
 
 void bootstrap(double x[], double y[], double* result, int* b, int* B, int *n, int* d) {
