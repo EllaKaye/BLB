@@ -1,3 +1,38 @@
+#' Bag of Little Bootstraps for a vector
+#' 
+#' Implements Bag of Little Bootstraps on a 1-d data vector. The statistic which is bootstrapped is the mean, with the exception of BLB_R, which can accept a generic function as the statistic.
+#' 
+#' The functions described here implement the Bag of Little Bootstraps (BLB) with varying degrees of efficiency.
+#' 
+#' \code{BLB_R} implements BLB entirely in R. It is the most generic function, in that it can accept any function (which acts on a vector) as the statistic to be bootstrapped. It is also by far the slowest implementations.
+#' 
+#' The rest of the functions are all implemented in C, but are built in to only be able to bootstrap the mean.
+#' 
+#' \code{BLB_serial} does not take advantage of any parallelism. 
+#' 
+#' \code{BLB_omp_on_s} uses openMP to parallelise the for loop over the s subsampling steps, then runs a serial bootstrap function within each subsample.
+#' 
+#' \code{BLB_omp_on_r} does not parallelise over the s subsamples, but uses openMP to parallelise the for loop over the r resampling steps within each subsample.
+#' 
+#' \code{BLB_omp_on_rs} uses openMP to parallelise over both the subsampling and resampling loops.
+#' 
+#' \code{BLB_cluster} uses parallelism in R to send each of the s subsamples to different servers in the cluster, then uses openMP to parallelise the interations over the r resamples within each subsample.
+#' 
+#' @name BLB
+#' @aliases BLB_serial
+#' @aliases BLB_omp_on_s
+#' @aliases BLB_omp_on_r
+#' @aliases BLB_omp_on_sr
+#' @aliases BLB_cluster
+#' @param data A vector of the original sample
+#' @param gamma Controls the size of the subsamples - each subsample is of size b = (floor(length(data) ^ gamma). Ideally in gamma is in [0.5, 1]
+#' @param FUN A function to calculate the estimator of the parameter of interest
+#' @param s The number of subsamples
+#' @param r The number of bootstrap replications (resamples) per subsample
+#' @return The mean across the s subsamples of the standard errors of the parameter estimates
+#' @examples
+#' X <- rnorm(1000000, 0, 5)
+#' BLB_R(X, mean, gamma=0.6)
 BLB_R <- function(data, gamma, FUN, ..., s=15, r=100) {
   n <- length(data)
   b <- round(n^gamma)
@@ -16,37 +51,58 @@ BLB_R <- function(data, gamma, FUN, ..., s=15, r=100) {
   return(mean(xis))
 }
 
-
-# void BLB_serial(double x[], double *result, double *gamma, int *s, int *R, int *n)
-BLB_serial <- function(x, gamma, s = 15, r = 100) {
-  ans <- .C("BLB_serial", as.double(x), result = as.double(0), as.double(gamma), as.integer(s), as.integer(r), as.integer(length(x)))
+#' @rdname BLB
+#' @examples 
+#' BLB_serial(X, 0.9)
+#' @export
+BLB_serial <- function(data, gamma, s = 15, r = 100) {
+  ans <- .C("BLB_serial", as.double(data), result = as.double(0), as.double(gamma), as.integer(s), as.integer(r), as.integer(length(x)))
+  return(ans$result)
+}
+#' @rdname BLB
+#' @examples 
+#' BLB_omp_on_s(X, 0.6)
+#' @export
+BLB_omp_on_s <- function(data, gamma, s = 15, r = 100) {
+  ans <- .C("BLB_omp_on_s", as.double(data), result = as.double(0), as.double(gamma), as.integer(s), as.integer(r), as.integer(length(x)))
   return(ans$result)
 }
 
-
-# void BLB_omp_on_s(double x[], double *result, double *gamma, int *s, int *R, int *n)
-BLB_omp_on_s <- function(x, gamma, s = 15, r = 100) {
-  ans <- .C("BLB_omp_on_s", as.double(x), result = as.double(0), as.double(gamma), as.integer(s), as.integer(r), as.integer(length(x)))
+#' @rdname BLB
+#' @examples 
+#' BLB_omp_on_r(X, 0.6)
+#' @export
+BLB_omp_on_r <- function(data, gamma, s = 15, r = 100) {
+  ans <- .C("BLB_omp_on_B", as.double(data), result = as.double(0), as.double(gamma), as.integer(s), as.integer(r), as.integer(length(x)))
   return(ans$result)
 }
 
-
-# void BLB_omp_on_B(double x[], double *result, double *gamma, int *s, int *R, int *n)
-BLB_omp_on_B <- function(x, gamma, s = 15, r = 100) {
-  ans <- .C("BLB_omp_on_B", as.double(x), result = as.double(0), as.double(gamma), as.integer(s), as.integer(r), as.integer(length(x)))
-  return(ans$result)
-}
-
-# void BLB_omp_on_sB(double x[], double *result, double *gamma, int *s, int *R, int *n)
-BLB_omp_on_sB <- function(x, gamma, s = 15, r = 100) {
-  ans <- .C("BLB_omp_on_sB", as.double(x), result = as.double(0), as.double(gamma), as.integer(s), as.integer(r), as.integer(length(x)))
+#' @rdname BLB
+#' @examples 
+#' BLB_omp_on_sr(X, 0.6)
+#' @export
+BLB_omp_on_sr <- function(data, gamma, s = 15, r = 100) {
+  ans <- .C("BLB_omp_on_sB", as.double(data), result = as.double(0), as.double(gamma), as.integer(s), as.integer(r), as.integer(length(x)))
   return(ans$result)
 }
 
 
 # void bootstrap_for_clust(double x[], double *result, double *gamma, int *R, int *n)
-bootstrap_for_clust_R <- function(i, x, gamma, r = 100) {
+bootstrap_for_clust <- function(i, data, gamma, r = 100) {
   # a is a dummy first argument, as can use with clusterApply
-  ans <- .C("bootstrap_for_clust", as.double(x), result = as.double(0), as.double(gamma), as.integer(r), as.integer(length(x)), as.integer(i))
+  ans <- .C("bootstrap_for_clust", as.double(data), result = as.double(0), as.double(gamma), as.integer(r), as.integer(length(data)), as.integer(i))
   return(ans$result)
+}
+
+#' @rdname BLB
+#' @examples 
+#' cluster <- c("greywagtail", "greyheron", "greypartridge", "greyplover")
+#' BLB_cluster(X, 0.6, cluster, s=16, r=96)
+#' @export
+BLB_cluster <- function(data, gamma, cluster, s=15, r=100) {
+  clust <-makePSOCKcluster(cluster)
+  clusterEvalQ(clust, library("BLB", lib.loc = "~/R"))
+  lambda <- clusterApply(clust, 1:s, "bootstrap_for_clust", data=x, gamma=gamma, r=r)
+  stopCluster(clust)  
+  return(mean(unlist(lambda)))
 }

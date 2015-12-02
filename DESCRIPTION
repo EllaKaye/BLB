@@ -8,4 +8,6 @@ Maintainer: Ella Kaye <ella.kaye@stats.ox.ac.uk>
 Description: High performance implementation of Bag of Little Bootstraps
 License: GPL (>=2)
 LazyData: TRUE
-Depends: parallel
+Depends:
+    parallel
+RoxygenNote: 5.0.1
