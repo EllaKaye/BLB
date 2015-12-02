@@ -76,7 +76,7 @@ void bootstrap_multidim (double x[], double y[], double* result, int* b, int* B,
   gsl_vector_free (coef);
   //gsl_vector_free (w);
   gsl_matrix_free (cov);
-  printf("\nI AM DONE\n\n");
+  //printf("\nI AM DONE\n\n");
 
 
 }

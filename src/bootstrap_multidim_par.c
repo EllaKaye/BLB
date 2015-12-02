@@ -70,13 +70,13 @@ void bootstrap_multidim_par(double x[], double y[], double* result, int* b, int*
   for ( int k = 0; k < *d; k++){
 
     for (int j = 0; j < *B ; j ++){
-      printf( "T_boot[%d] = %f \n", j, gsl_matrix_get( T_boot,j ,k ) );
+      // printf( "T_boot[%d] = %f \n", j, gsl_matrix_get( T_boot,j ,k ) );
     }
 
 
-    printf("\n");
+    //printf("\n");
     result[ k ] = sqrt( gsl_stats_variance( gsl_matrix_ptr ( T_boot, 0, k ), 1, *B ) );
-    printf("result[%d ] = %f \n\n", k, result[ k ]);
+    // printf("result[%d ] = %f \n\n", k, result[ k ]);
 
     //result[ k ] = gsl_stats_variance( gsl_matrix_ptr ( T_boot, 0, k ), 1, *B );
 
