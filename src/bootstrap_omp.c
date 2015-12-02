@@ -138,7 +138,7 @@ void BLB_omp_on_s(double x[], double *result, double *gamma, int *s, int *R, int
     }
   }
   // take average of results from the s subsamples
-  xi = xi / (double) *n;
+  xi = xi / (double) *s;
   *result = xi;	
 }
 
