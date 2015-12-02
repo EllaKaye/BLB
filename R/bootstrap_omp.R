@@ -17,3 +17,10 @@ BLB_omp_on_B <- function(x, gamma, s = 15, r = 100) {
   ans <- .C("BLB_omp_on_B", as.double(x), result = as.double(0), as.double(gamma), as.integer(s), as.integer(r), as.integer(length(x)))
   return(ans$result)
 }
+
+# void bootstrap_for_clust(double x[], double *result, double *gamma, int *R, int *n)
+bootstrap_for_clust <- function(a, x, gamma, r = 100) {
+  # a is a dummy first argument, as can use with clusterApply
+  ans <- .C("bootstrap_for_clust", as.double(x), result = as.double(0), as.double(gamma), as.integer(r), as.integer(length(x)))
+  return(ans$result)
+}

@@ -171,3 +171,30 @@ void BLB_omp_on_B(double x[], double *result, double *gamma, int *s, int *R, int
   // take average of results from the s subsamples
   *result = gsl_stats_mean(xis, 1, *s);
 }
+
+void bootstrap_for_clust(double x[], double *result, double *gamma, int *R, int *n)
+  // n is length of the data
+{
+  gsl_rng *restrict r = NULL;
+  
+  if(r == NULL) { // First call to this function, setup RNG
+    gsl_rng_env_setup();
+    r = gsl_rng_alloc(gsl_rng_mt19937);
+    gsl_rng_set(r, time(NULL));
+  }
+  
+  int b;
+  b = (int) floor(pow(*n, *gamma));
+  
+  double xi = 0;
+  
+  // select subsample of size b of the data
+  double subsamp[b];
+  gsl_ran_choose(r, subsamp, b, x, *n, sizeof(double));
+    
+  // run bootstrap on that subsample (resamples n for each replicate)
+  // runs in parallel through openMP
+  bootstrap_b_omp(subsamp, &xi, &b, R, n);
+  
+  *result = xi;
+}
