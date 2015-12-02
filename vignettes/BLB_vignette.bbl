@@ -1,0 +1,96 @@
+% $ biblatex auxiliary file $
+% $ biblatex version 2.5 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated as
+% required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+\entry{Efron1979}{article}{}
+  \name{author}{1}{}{%
+    {{}%
+     {Efron}{E.}%
+     {Bradley}{B.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{EB1}
+  \strng{fullhash}{EB1}
+  \field{labelyear}{1979}
+  \field{sortinit}{E}
+  \field{pages}{1\bibrangedash 26}
+  \field{title}{Bootstrap methods: another look at the jackknife}
+  \field{volume}{7}
+  \field{journaltitle}{Annals of Statistics}
+  \field{year}{1979}
+\endentry
+
+\entry{Kleiner2014}{article}{}
+  \name{author}{4}{}{%
+    {{}%
+     {Kleiner}{K.}%
+     {Ariel}{A.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Talwalkar}{T.}%
+     {Ameet}{A.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Sarkar}{S.}%
+     {Purnamrita}{P.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Jordan}{J.}%
+     {Michael~I}{M.~I.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{KA+1}
+  \strng{fullhash}{KATASPJMI1}
+  \field{labelyear}{2014}
+  \field{sortinit}{K}
+  \field{number}{4}
+  \field{pages}{795\bibrangedash 816}
+  \field{title}{A scalable bootstrap for massive data}
+  \field{volume}{76}
+  \field{journaltitle}{Journal of the Royal Statistical Society (Series B)}
+  \field{year}{2014}
+\endentry
+
+\entry{Rubin1981}{article}{}
+  \name{author}{1}{}{%
+    {{}%
+     {Rubin}{R.}%
+     {Donald~B}{D.~B.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{RDB1}
+  \strng{fullhash}{RDB1}
+  \field{labelyear}{1981}
+  \field{sortinit}{R}
+  \field{number}{1}
+  \field{pages}{130\bibrangedash 134}
+  \field{title}{The Bayesian Bootstrap}
+  \field{volume}{9}
+  \field{journaltitle}{The Annals of Statistics}
+  \field{year}{1981}
+\endentry
+
+\lossort
+\endlossort
+
+\endinput
