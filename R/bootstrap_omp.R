@@ -102,7 +102,7 @@ bootstrap_for_clust <- function(i, data, gamma, r = 100) {
 BLB_cluster <- function(data, gamma, cluster, s=15, r=100) {
   clust <-makePSOCKcluster(cluster)
   clusterEvalQ(clust, library("BLB", lib.loc = "~/R"))
-  lambda <- clusterApply(clust, 1:s, "bootstrap_for_clust", data=x, gamma=gamma, r=r)
+  lambda <- clusterApply(clust, 1:s, "bootstrap_for_clust", data=data, gamma=gamma, r=r)
   stopCluster(clust)  
   return(mean(unlist(lambda)))
 }
@@ -115,3 +115,43 @@ BLB_cluster <- function(data, gamma, cluster, s=15, r=100) {
 #  ans <- .C("BLB_md_omp_on_s", as.double(t(X)), as.double(y), result = as.double(numeric(d)), as.double(gamma), as.integer(s), as.integer(r), as.integer(n), as.integer(d))
 #  return(ans$result)
 #}
+
+# void BLB_serial_multinom(double x[], double *result, double *gamma, int *s, int *R, int *n)
+BLB_serial_multinom <- function(data, gamma, s = 15, r = 100) {
+  ans <- .C("BLB_serial_multinom", as.double(data), result = as.double(0), as.double(gamma), as.integer(s), as.integer(r), as.integer(length(data)))
+  return(ans$result)
+}
+
+BLB_omp_on_s_multinom <- function(data, gamma, s = 15, r = 100) {
+  ans <- .C("BLB_omp_on_s_multinom", as.double(data), result = as.double(0), as.double(gamma), as.integer(s), as.integer(r), as.integer(length(data)))
+  return(ans$result)
+}
+
+BLB_omp_on_r_multinom <- function(data, gamma, s = 15, r = 100) {
+  ans <- .C("BLB_omp_on_B_multinom", as.double(data), result = as.double(0), as.double(gamma), as.integer(s), as.integer(r), as.integer(length(data)))
+  return(ans$result)
+}
+
+BLB_omp_on_sr_multinom <- function(data, gamma, s = 15, r = 100) {
+  ans <- .C("BLB_omp_on_sB_multinom", as.double(data), result = as.double(0), as.double(gamma), as.integer(s), as.integer(r), as.integer(length(data)))
+  return(ans$result)
+}
+
+bootstrap_for_clust_multinom <- function(i, data, gamma, r = 100) {
+  # a is a dummy first argument, as can use with clusterApply
+  ans <- .C("bootstrap_for_clust_multinom", as.double(data), result = as.double(0), as.double(gamma), as.integer(r), as.integer(length(data)), as.integer(i))
+  return(ans$result)
+}
+
+
+BLB_cluster_multinom <- function(data, gamma, cluster, s=15, r=100) {
+  clust <-makePSOCKcluster(cluster)
+  clusterEvalQ(clust, library("BLB", lib.loc = "~/R"))
+  lambda <- clusterApply(clust, 1:s, "bootstrap_for_clust_multinom", data=data, gamma=gamma, r=r)
+  stopCluster(clust)  
+  return(mean(unlist(lambda)))
+}
+
+
+
+
